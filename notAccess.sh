@@ -9,7 +9,7 @@
 
 mdb-schema --drop-table $1 postgres > schema.sql
 
-for i in $( mdb-tables $1 ); do echo $i ; mdb-export -D "%Y-%m-%d %H:%M:%S" -H -q "'" -I postgres $1 $i > sql/$i.sql; done
+for i in $( mdb-tables $1 ); do echo $i ; mdb-export -D "%Y-%m-%d %H:%M:%S" -H -q "'" -I postgres $1 $i | sed -e "s/,0,/,'0',/"  > sql/$i.sql; done
 
 psql -d $2 -U $3 -h $4 -f schema.sql #| sqlite3 $2
 
